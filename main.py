@@ -23,7 +23,10 @@ def get_information_about(position) -> dict:
   s['Link'] = 'https://www.olx.kz' + position.get('href')
   return s
 
-def get_category_pages(url: str, ans: list) -> list:
+def get_category_pages(url: str, ans=None) -> list:
+  if ans is None:
+     ans = []
+
   page = requests.get(url)
   soup = BS(page.text, "html.parser")
   
@@ -32,12 +35,9 @@ def get_category_pages(url: str, ans: list) -> list:
     ans.append(next_url)
     #print(ans)
     #print(next_url)
-    get_category_pages(next_url, ans)
+    return get_category_pages(next_url, ans)
   else:
-    #print('blya')
-    print(ans)
-    b = ans
-    return b
+    return ans
 
 def main():
     categories, names = ['https://www.olx.kz/d/moda-i-stil/krasota-zdorove/parfyumeriya/', 'https://www.olx.kz/d/moda-i-stil/podarki/vkusnye/'], ['Парфюмерия', 'Подарки']
@@ -55,7 +55,7 @@ def main():
             writer.writerows(positions)
 
 def main2():
-  print(get_category_pages('https://www.olx.kz/d/moda-i-stil/krasota-zdorove/parfyumeriya/', []))
+  print(get_category_pages('https://www.olx.kz/d/moda-i-stil/krasota-zdorove/parfyumeriya/'))
 
 if __name__ == '__main__':
-    main2()
+    main()
